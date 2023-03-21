@@ -11,9 +11,7 @@
   <body class="<?php echo $body_class; ?>">
     <header class="main-header">
       <div class="wrapper main-header__wrap">
-        <a href="index.html" class="main-header__logolink" aria-label="Логотип-ссылка на Главную">
-          <img src="img/logo.png" alt="">
-        </a>
+        <?= the_custom_logo(); ?>
         <nav class="main-navigation">
           <ul class="main-navigation__list">
             <li>
