@@ -290,6 +290,6 @@
         </div>
       </footer>
     </div>
-    <script src="./js/js.js"></script>
+    <?= wp_footer(); ?>
   </body>
 </html>

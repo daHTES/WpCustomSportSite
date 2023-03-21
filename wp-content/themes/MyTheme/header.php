@@ -7,7 +7,8 @@
     <link rel="shortcut icon" href="favicon.png">
     <?= wp_head();?>
   </head>
-  <body>
+  <?= $body_class = ''; if(!is_front_page()){$body_class = 'inner';}?>
+  <body class="<?php echo $body_class; ?>">
     <header class="main-header">
       <div class="wrapper main-header__wrap">
         <a href="index.html" class="main-header__logolink" aria-label="Логотип-ссылка на Главную">
