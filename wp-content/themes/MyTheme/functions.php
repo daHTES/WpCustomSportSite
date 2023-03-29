@@ -1,4 +1,15 @@
 <?php
+// подключение кастомного виджета
+$widgets = [
+    'SI_Widget_Copyright.php',
+    'SI_Widget_Contacts.php',
+    'SI_Widget_HelpUs.php',
+    'SI_Widget_Social.php',
+    'SI_Widget_Iframe.php'
+];
+foreach($widgets as $wd){
+    require_once(__DIR__ . '/inc/' . $wd);
+}
 
 add_action('after_setup_theme', 'sport_setup');
 add_action('wp_enqueue_scripts', '_si_scripts');
@@ -30,7 +41,7 @@ function si_register_widgets(){
                 'after_widget' => null
         ]);
         register_sidebar([
-            'name' => 'Сайдбар в подвале',
+            'name' => 'Сайдбар в подвале-контакты',
             'id' => 'si-footer',
             'before_widget' => null,
             'after_widget' => null,
@@ -38,6 +49,12 @@ function si_register_widgets(){
         register_sidebar([
             'name' => 'Сайдбар в подвале второй',
             'id' => 'si-footer-2',
+            'before_widget' => null,
+            'after_widget' => null
+        ]);
+        register_sidebar([
+            'name' => 'Сайдбар в подвале - Центр',
+            'id' => 'si-footer-3',
             'before_widget' => null,
             'after_widget' => null
         ]);
@@ -53,6 +70,12 @@ function si_register_widgets(){
             'before_widget' => null,
             'after_widget' => null
         ]);
+
+        register_widget('si_widget_copyright');
+        register_widget('si_widget_contacts');
+        register_widget('si_widget_helpus');
+        register_widget('si_widget_social');
+        register_widget( 'si_widget_iframe' );
 }
 
 // подключение скриптов
