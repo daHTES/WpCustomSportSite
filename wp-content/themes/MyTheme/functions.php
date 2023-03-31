@@ -16,6 +16,16 @@ add_action('after_setup_theme', 'sport_setup');
 add_action('wp_enqueue_scripts', '_si_scripts');
 add_action('widgets_init', 'si_register_widgets');
 
+// регистрация кастомных записей
+add_action('init', 'si_register_custom_post_services');
+add_action('init', 'si_register_custom_post_trainers');
+add_action('init', 'si_register_custom_post_schedule');
+add_action('init', 'si_register_custom_post_prices');
+add_action('init', 'si_register_custom_post_clubs_cart');
+//регистрация таксономий
+add_action('init', 'si_register_custom_tax_days_for_schedule');
+add_action('init', 'si_register_custom_tax_places_for_schedule');
+
 //регистрация шорткода
 add_shortcode('si-paste-link', 'si_paste_link');
 
@@ -124,7 +134,180 @@ function si_paste_link ( $attr ){
     }
 }
 
+function si_register_custom_post_services(){
+    register_post_type('services', [
+                'labels' => [
+                    'name' => 'Услуги',
+                    'singular_name' => 'Услуга',
+                    'add_new' => 'Добавить новую услугу',
+                    'add_new_item' => 'Добавить новые услуги',
+                    'edit_item' => 'Редактировать услуги',
+                    'new_item' => 'Новая услуга',
+                    'update_item' => 'Обновить',
+                    'view_item' => 'Смотреть услуги',
+                    'search_items' => 'Искать',
+                    'not_found' => 'Не найдено',
+                    'not_found_in_trash' => 'Не найдено в корзине',
+                    'parent_item_colon' => '',
+                    'menu_name' => 'Услуги'
+                ],
+                'public' => true,
+                'menu_position' => 20,
+                'menu_icon' => 'dashicons-buddicons-groups',
+                'hierarchical' =>  false,
+                'supports' => ['title', 'editor', 'thumbnail'],
+                'has_archive' => true
+    ]);
+}
 
+function si_register_custom_post_trainers(){
+    register_post_type('trainers', [
+        'labels' => [
+            'name' => 'Тренера',
+            'singular_name' => 'Тренер',
+            'add_new' => 'Добавить нового тренера',
+            'add_new_item' => 'Добавить новых тренеров',
+            'edit_item' => 'Редактировать тренера',
+            'new_item' => 'Новый тренер',
+            'update_item' => 'Обновить',
+            'view_item' => 'Смотреть тренера',
+            'search_items' => 'Искать',
+            'not_found' => 'Не найдено',
+            'not_found_in_trash' => 'Не найдено в корзине',
+            'parent_item_colon' => '',
+            'menu_name' => 'Тренеры'
+        ],
+        'public' => true,
+        'menu_position' => 20,
+        'menu_icon' => 'dashicons-universal-access',
+        'hierarchical' =>  false,
+        'supports' => ['title', 'editor', 'thumbnail'],
+        'has_archive' => true
+]);
+}
+
+function si_register_custom_post_schedule(){
+    register_post_type('schedule', [
+        'labels' => [
+            'name' => 'Занятия',
+            'singular_name' => 'Занятие',
+            'add_new' => 'Добавить новое занятие',
+            'add_new_item' => 'Добавить новые занятия',
+            'edit_item' => 'Редактировать занятие',
+            'new_item' => 'Новое занятие',
+            'update_item' => 'Обновить',
+            'view_item' => 'Смотреть занятие',
+            'search_items' => 'Искать',
+            'not_found' => 'Не найдено',
+            'not_found_in_trash' => 'Не найдено в корзине',
+            'parent_item_colon' => '',
+            'menu_name' => 'Занятия'
+        ],
+        'public' => true,
+        'menu_position' => 20,
+        'menu_icon' => 'dashicons-universal-access-alt',
+        'hierarchical' =>  false,
+        'supports' => ['title', 'editor', 'thumbnail'],
+        'has_archive' => true
+]);
+}
+
+function si_register_custom_post_prices(){
+    register_post_type('prices', [
+        'labels' => [
+            'name' => 'Цены',
+            'singular_name' => 'Цена',
+            'add_new' => 'Добавить новую цену',
+            'add_new_item' => 'Добавить новую цену',
+            'edit_item' => 'Редактировать цену',
+            'new_item' => 'Новая цена',
+            'update_item' => 'Обновить',
+            'view_item' => 'Смотреть цену',
+            'search_items' => 'Искать',
+            'not_found' => 'Не найдено',
+            'not_found_in_trash' => 'Не найдено в корзине',
+            'parent_item_colon' => '',
+            'menu_name' => 'Цены'
+        ],
+        'public' => true,
+        'menu_position' => 20,
+        'menu_icon' => 'dashicons-money-alt',
+        'hierarchical' =>  false,
+        'supports' => ['title', 'editor', 'thumbnail'],
+        'has_archive' => true
+]);
+}
+
+function si_register_custom_post_clubs_cart(){
+    register_post_type('cards', [
+        'labels' => [
+            'name' => 'Карты',
+            'singular_name' => 'Карта',
+            'add_new' => 'Добавить новую карту',
+            'add_new_item' => 'Добавить новую карту',
+            'edit_item' => 'Редактировать карту',
+            'update_item' => 'Обновить',
+            'new_item' => 'Новая карта',
+            'view_item' => 'Смотреть карту',
+            'search_items' => 'Искать',
+            'not_found' => 'Не найдено',
+            'not_found_in_trash' => 'Не найдено в корзине',
+            'parent_item_colon' => '',
+            'menu_name' => 'Карты'
+        ],
+        'public' => true,
+        'menu_position' => 19,
+        'menu_icon' => 'dashicons-index-card',
+        'hierarchical' =>  false,
+        'supports' => ['title', 'editor', 'thumbnail'],
+        'has_archive' => false
+]);
+}
+
+function si_register_custom_tax_days_for_schedule(){
+    register_taxonomy('schedule_days', ['schedule'], [
+        'labels' => [
+            'name' => 'Дни недели',
+            'singular_name' => 'День недели',
+            'add_new' => 'Добавить день недели',
+            'add_new_item' => 'Добавить новый день недели',
+            'edit_item' => 'Редактировать день недели',
+            'update_item' => 'Обновить',
+            'new_item' => 'Новый день недели',
+            'view_item' => 'Смотреть день недели',
+            'search_items' => 'Искать',
+            'not_found' => 'Не найдено',
+            'not_found_in_trash' => 'Не найдено в корзине',
+            'parent_item_colon' => '',
+            'menu_name' => 'Дни недели'
+        ],
+        'description' => 'Дни недели для занятий с тренерами',
+        'public' => true,
+        'hierarchical' =>  true
+]);
+}
+
+function si_register_custom_tax_places_for_schedule(){
+    register_taxonomy('places', ['schedule'], [
+        'labels' => [
+            'name' => 'Залы',
+            'singular_name' => 'Залы',
+            'add_new' => 'Добавить Залы',
+            'add_new_item' => 'Добавить новый зал',
+            'edit_item' => 'Редактировать зал',
+            'new_item' => 'Новый зал',
+            'view_item' => 'Смотреть зали',
+            'search_items' => 'Искать',
+            'not_found' => 'Не найдено',
+            'not_found_in_trash' => 'Не найдено в корзине',
+            'parent_item_colon' => '',
+            'menu_name' => 'Залы'
+        ],
+        'description' => 'Залы занятий с тренерами',
+        'public' => true,
+        'hierarchical' =>  true
+]);
+}
 
 
 ?>
