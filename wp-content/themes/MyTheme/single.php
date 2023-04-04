@@ -18,7 +18,12 @@
           <?php the_content(); ?>
         <footer class="main-article__footer">
           <time datetime="09-05-1945"><?php the_date('d F Y'); ?></time>
-          <a href="#" class="main-article__like like">
+          <butoon 
+          class="main-article__like like"
+          style="background-color: transparent; border: none; font-size: 16px; cursor: pointer"
+          data-href="<?php echo esc_url(admin_url('admin-ajax.php')); ?>"
+          data-id="<?php echo $id; ?>"
+          >
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 51.997 51.997" style="enable-background:new 0 0 51.997 51.997;" xml:space="preserve">
               <style> path{
 	 		fill: #666;
@@ -32,12 +37,74 @@
             <span class="like__count"><?php 
             $likes = get_post_meta($id, 'si-like', true); 
             echo $likes ? $likes : 0; ?></span>
-          </a>
+          </button>
         </footer>
       </article>
       <?php endwhile; endif; ?>
     </main>
-
+<!--Скрипт обработки лайков--->
+<script>
+window.addEventListener('load', function(){
+  const likeBtn = document.querySelector('.like');
+  const postId = likeBtn.getAttribute('data-id');
+  try{
+    if(!localStorage.getItem('liked')){
+        localStorage.setItem('liked', '');
+  }
+}catch(e){
+    console.log(e);
+}
+  // функция проверки лайков от зашедших юзеров
+  function getAboutLike(id){
+      let hasLike = false;
+      try{
+          hasLike = localStorage.getItem('liked').split(',').includes(id);
+      }catch(e){
+          console.log(e);
+      }
+      return hasLike;
+  }
+  let hasLike = getAboutLike(postId);
+  if(hasLike){
+    likeBtn.classList.add('like_liked');
+  }
+  likeBtn.addEventListener('click', function(e){
+    e.preventDefault();
+    let hasLike = getAboutLike(postId);
+    const data = new FormData();
+    data.append('action', 'post-likes');
+    let todo = hasLike ? 'minus' : 'plus';
+    data.append('todo', todo);
+    data.append('id', postId);
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', likeBtn.getAttribute('data-href'));
+    xhr.send(data);
+    likeBtn.disabled = true;
+    xhr.addEventListener('readystatechange', function(){
+        if(xhr.readyState !== 4) return;
+        if(xhr.status === 200){
+            likeBtn.querySelector('.like_count').innerText = xhr.responseText;
+            let localData = localStorage.getItem('liked');
+            let newData = '';
+            if(hasLike){
+                newData = localData.split(',').filter(function(id){
+                              return id !== postId
+                }).join(',');
+            }else{
+                  newData = localData.split(',').filter(function(el){
+                      return el !== '';
+                  }).concat(postId).join(',');
+            }
+            localStorage.setItem('liked', newData);
+            likeBtn.classList.toggle('like_liked');
+        }else{
+          console.log(xhr.statusText);
+        }
+        likeBtn.disabled = false;
+    });
+  });
+});
+</script>
 <?php
         get_footer();
 ?>
