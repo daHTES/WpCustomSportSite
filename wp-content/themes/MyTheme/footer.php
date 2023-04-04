@@ -4,7 +4,7 @@
           <button class="modal__closer">
             <span class="sr-only">Закрыть</span>
           </button>
-          <form action="#" class="modal-form__form">
+          <form method="POST" action="<?php echo admin_url('admin-post.php'); ?>" class="modal-form__form">
             <h2 class="modal-content__h"> Отправить заявку </h2>
             <p> Оставьте свои контакты и менеджер с Вами свяжется </p>
             <p>
@@ -19,6 +19,7 @@
                 <input type="text" name="si-user-phone" placeholder="Телефон" pattern="^\+{0,1}[0-9]{4,}$" required>
               </label>
             </p>
+            <input type="hidden" name="action" value="si-midal-form">
             <button class="btn" type="submit">Отправить</button>
             <input type="hidden" name="action" value="si-modal-form">
           </form>
@@ -30,7 +31,8 @@
         <div class="wrapper main-header__wrap">
           <p class="main-header__logolink">
                 <?= the_custom_logo(); ?>
-                <span class="slogan">Твой фитнес клуб всегда рядом!</span>
+                <span class="slogan"><?php echo get_option('si_register_custom_slogan'); ?>
+              </span>
           </p>
           <?php 
           $locations = get_nav_menu_locations();

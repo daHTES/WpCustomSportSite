@@ -54,7 +54,7 @@
               ?>
             <li class="category">
               <a href="<?php echo $cat_link; ?>" class="category__link">
-                <img src="<?php echo $img_url; ?>" alt="" class="category__thumb">
+                <img src="<?php echo $img_url; ?>" alt ="" class="category__thumb">
                 <span class="category__name"><?php echo $cat->name; ?></span>
               </a>
             </li>

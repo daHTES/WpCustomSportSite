@@ -15,7 +15,6 @@ foreach($widgets as $wd){
 add_action('after_setup_theme', 'sport_setup');
 add_action('wp_enqueue_scripts', '_si_scripts');
 add_action('widgets_init', 'si_register_widgets');
-
 // регистрация кастомных записей
 add_action('init', 'si_register_custom_post_services');
 add_action('init', 'si_register_custom_post_trainers');
@@ -25,17 +24,18 @@ add_action('init', 'si_register_custom_post_clubs_cart');
 //регистрация таксономий
 add_action('init', 'si_register_custom_tax_days_for_schedule');
 add_action('init', 'si_register_custom_tax_places_for_schedule');
-
 //регистрация шорткода
 add_shortcode('si-paste-link', 'si_paste_link');
-
 //фильтр для шорткода
 add_filter('si_widget_text', 'do_shortcode');
-
 //добавл. пост-мета полей для записей
 add_action('add_meta_boxes', 'si_meta_boxes');
 add_action('save_post', 'si_likes_save_meta');
-
+// добавление полей в админку
+add_action('admin_init', 'si_register_custom_slogan');
+// регистрация для отправки формы
+add_action('admin_post_nopriv_si-modal-form', 'si_register_modal_form');
+add_action('admin_post_si-modal-form', 'si_register_modal_form');
 // настройка основных функций темы
 function sport_setup(){
     // добавляем лого
@@ -312,6 +312,35 @@ function si_register_custom_tax_places_for_schedule(){
         'hierarchical' =>  true
 ]);
 }
+/* Функции по выводу слогана сайта в админке*/
+/******************************************************************* */
+function si_register_custom_slogan(){
+    add_settings_field(
+        'si_option_field_slogan',
+        'Слоган вашего сайта',
+        'si_option_slogan_cb',
+        'general',
+        'default',
+        ['label_for' => 'si_option_field_slogan']
+    );
+        register_setting(
+        'general',
+        'si_option_field_slogan',
+        'strval'
+        );
+}
+function si_option_slogan_cb($args){
+    $slug = $args['label_for'];
+?>
+<input 
+        type="text"
+        id="<?php echo $slug; ?>"
+        value="<?php echo get_option($slug); ?>"
+        name="<?php echo $slug; ?>"
+>
+<?php       
+}
+/******************************************************************* */
 
 /* Функции по выводу и обработке лайков*/
 /******************************************************************* */
@@ -337,4 +366,9 @@ function si_likes_save_meta($post_id){
 }
 /******************************************************************* */
 
+/* Функции по выводу и обработке модального окна*/
+/******************************************************************* */
+function si_register_modal_form(){
+    echo 'Good';
+}
 ?>
