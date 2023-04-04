@@ -32,6 +32,10 @@ add_shortcode('si-paste-link', 'si_paste_link');
 //фильтр для шорткода
 add_filter('si_widget_text', 'do_shortcode');
 
+//добавл. пост-мета полей для записей
+add_action('add_meta_boxes', 'si_meta_boxes');
+add_action('save_post', 'si_likes_save_meta');
+
 // настройка основных функций темы
 function sport_setup(){
     // добавляем лого
@@ -309,5 +313,28 @@ function si_register_custom_tax_places_for_schedule(){
 ]);
 }
 
+/* Функции по выводу и обработке лайков*/
+/******************************************************************* */
+function si_meta_boxes(){
+    add_meta_box(
+        'si-like',
+        'Количество лайков: ',
+        'si_meta_like_cb',
+        'post'
+    );
+}
+function si_meta_like_cb($post_obj){
+        $likes = get_post_meta($post_obj->ID, 'si-like', true);
+        $likes = $likes ? $likes : 0;
+        echo "<input type=\"text\" name=\"si-like\" value=\"${likes}\">";
+
+        //echo '<p>' . $likes . '</p>';
+}
+function si_likes_save_meta($post_id){
+        if(isset($_POST['si-like'])){
+            update_post_meta($post_id, 'si-like', $_POST['si-like']);
+        }
+}
+/******************************************************************* */
 
 ?>
