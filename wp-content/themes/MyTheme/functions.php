@@ -21,6 +21,7 @@ add_action('init', 'si_register_custom_post_trainers');
 add_action('init', 'si_register_custom_post_schedule');
 add_action('init', 'si_register_custom_post_prices');
 add_action('init', 'si_register_custom_post_clubs_cart');
+add_action('init', 'si_register_custom_post_application');
 //регистрация таксономий
 add_action('init', 'si_register_custom_tax_days_for_schedule');
 add_action('init', 'si_register_custom_tax_places_for_schedule');
@@ -28,6 +29,8 @@ add_action('init', 'si_register_custom_tax_places_for_schedule');
 add_shortcode('si-paste-link', 'si_paste_link');
 //фильтр для шорткода
 add_filter('si_widget_text', 'do_shortcode');
+//мета поля для Заявок
+add_action('add_meta_boxes', 'si_meta_boxes_for_application');
 //добавл. пост-мета полей для записей
 add_action('add_meta_boxes', 'si_meta_boxes');
 add_action('save_post', 'si_likes_save_meta');
@@ -274,6 +277,34 @@ function si_register_custom_post_clubs_cart(){
 ]);
 }
 
+function si_register_custom_post_application(){
+    register_post_type('applications', [
+        'labels' => [
+            'name' => 'Заявка',
+            'singular_name' => 'Заявка',
+            'add_new' => 'Добавить новую заявку',
+            'add_new_item' => 'Добавить новую заявку',
+            'edit_item' => 'Редактировать заявку',
+            'update_item' => 'Обновить',
+            'new_item' => 'Новая заявка',
+            'view_item' => 'Смотреть заявку',
+            'search_items' => 'Искать',
+            'not_found' => 'Не найдено',
+            'not_found_in_trash' => 'Не найдено в корзине',
+            'parent_item_colon' => '',
+            'menu_name' => 'Заявки'
+        ],
+        'public' => false,
+        'show_ui' => true,
+        'show_in_menu' => true,
+        'menu_position' => 19,
+        'menu_icon' => 'dashicons-text-page',
+        'hierarchical' =>  false,
+        'supports' => ['title'],
+        'has_archive' => false
+]);
+}
+
 function si_register_custom_tax_days_for_schedule(){
     register_taxonomy('schedule_days', ['schedule'], [
         'labels' => [
@@ -404,6 +435,85 @@ function si_register_add_col_likes_count_in_admin($default){
 /* Функции по выводу и обработке модального окна*/
 /******************************************************************* */
 function si_register_modal_form(){
-    echo 'Good';
+    $name = $_POST['si-user-name'] ? $_POST['si-user-name'] : "Anonymus";
+    $phone = $_POST['si-user-phone'] ? $_POST['si-user-phone'] : false;
+    $choice = $_POST['form-post-id'] ? $_POST['form-post-id'] : 'empty';
+    if($phone){
+            $name = wp_strip_all_tags($name) ;
+            $phone = wp_strip_all_tags($phone);
+            $choice = wp_strip_all_tags($choice);
+            $id = wp_insert_post(wp_slash([
+                'post_title' => 'Заявка № ',
+                'post_type' => 'applications',
+                'post_status' => 'publish',
+                'meta_input' => [
+                    'si_application_name' => $name,
+                    'si_application_phone' => $phone,
+                    'si_application_choice' => $choice
+                ]
+            ]));
+            if($id !== 0){
+                wp_update_post([
+                    'ID' => $id,
+                    'post_title' => 'Заявка № ' . $id
+                ]);
+                update_field('applications_status', 'new', $id);
+            }
+    }
+    header('Location: ' .  home_url());
 }
+/******************************************************************* */
+
+
+/* Функции по метаполям Заявок и их отрисовки*/
+/******************************************************************* */
+function si_meta_boxes_for_application(){
+            $fields = [
+                'si_application_date' => 'Дата Заявки: ',
+                'si_application_name' => 'Имя клиента: ',
+                'si_application_phone' => 'Номер телефона: ',
+                'si_application_choice' => 'Выбор клиента:'
+            ];
+
+            foreach($fields as $slug => $text){
+                add_meta_box(
+                    $slug,
+                    $text,
+                    'si_application_fields_cb',
+                    'applications',
+                    'advanced',
+                    'default',
+                    $slug
+                );
+            }
+}
+
+function si_application_fields_cb($post_obj, $slug){
+        $slug = $slug['args'];
+        $data = '';
+        switch($slug){
+            case 'si_application_date':
+                $data = $post_obj->post_date;
+                break;
+            case 'si_application_choice':
+                $id = get_post_meta($post_obj->ID, $slug, true);
+                $title = get_the_title($id);
+                $type = get_post_type_object(get_post_type($id))->labels->singular_name;
+                $data = 'Клиент выбрал: <strong>' . $title . '</strong>' . '<br> Из раздела: <strong> ' . $type . '</strong>';
+                break;
+            default:
+            $data = get_post_meta($post_obj->ID, $slug, true);
+            $data = $data ? $data : 'Нет данных';
+            break;
+        }
+        echo '<p>' . $data . '</p>';
+}
+
+// function si_application_date_cb($post_obj){
+//     $date = get_post_meta($post_obj->ID, 'si_application_date', true);
+//     $date = $date ? $date : '';
+//     echo '<span>' . $date . '</span>';
+// }
+
+/******************************************************************* */
 ?>

@@ -115,17 +115,15 @@ Template Name: Шаблон для Главной стр.
                 <li class="card__feature"><?php echo $bn; ?></li>
                 <?php endforeach; ?>
               </ul>
-              <a data-post-id="99" href="#modal-form" class="card__buy btn btn_modal">купить</a>
+              <a data-post-id="<?php echo $id; ?>" href="#modal-form" class="card__buy btn btn_modal">купить</a>
             </li>
-            <?php endwhile; wp_reset_postdata();?>
+            <?php endwhile; 
+            wp_reset_postdata();?>
           </ul>
         </div>
       </section>
       <?php endif; ?>
     </main>
-
-
-
 <?php
         get_footer();
 ?>
