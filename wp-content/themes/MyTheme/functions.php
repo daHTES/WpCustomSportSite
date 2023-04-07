@@ -246,7 +246,8 @@ function si_register_custom_post_prices(){
         'menu_position' => 20,
         'menu_icon' => 'dashicons-money-alt',
         'hierarchical' =>  false,
-        'supports' => ['title', 'editor', 'thumbnail'],
+        'show_in_rest' => true,
+        'supports' => ['title', 'editor'],
         'has_archive' => true
 ]);
 }

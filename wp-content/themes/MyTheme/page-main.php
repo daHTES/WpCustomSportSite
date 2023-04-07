@@ -18,7 +18,7 @@ Template Name: Шаблон для Главной стр.
         <div class="wrapper about__flex">
           <div class="about__wrap">
             <h2 class="main-heading about__h"> <?php echo $post_about->post_title; ?> </h2>
-            <p class="about__text"> <?php echo $post_about->post_excerpt; ?> </p>
+            <p class="about__text"> <?php echo $post_about->post_content; ?> </p>
             <a href="<?php echo get_the_permalink($post_about->ID); ?>" class="about__link btn">подробнее</a>
           </div>
           <figure class="about__thumb">

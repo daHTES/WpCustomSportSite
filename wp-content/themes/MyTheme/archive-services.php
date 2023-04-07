@@ -4,14 +4,7 @@
 <main class="main-content">
       <h1 class="sr-only">Услуги</h1>
       <div class="wrapper">
-        <ul class="breadcrumbs">
-          <li class="breadcrumbs__item breadcrumbs__item_home">
-            <a href="index.html" class="breadcrumbs__link">Главная</a>
-          </li>
-          <li class="breadcrumbs__item">
-            <a href="services.html" class="breadcrumbs__link">Услуги</a>
-          </li>
-        </ul>
+      <?php get_template_part('template/breadcrumps');?>
         <?php 
         if(have_posts()):
         ?>
@@ -27,7 +20,7 @@
             <p class="service__action">
               <a data-post-id="<?php echo $id; ?>" href="#modal-form" class="service__subscribe btn btn_modal">записаться</a>
               <strong class="service__price price"> <?php the_field('services_price'); ?> 
-              <span class="price__unit">р./мес.</span>
+              <span class="price__unit">грн./мес.</span>
               </strong>
             </p>
             <figure class="service__thumb">
